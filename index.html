@@ -14,11 +14,14 @@
     Papa.parse('assets/Glasgow_Hundred_Views/index.csv', {
       download: true,
       header: true,
+      skipEmptyLines: true,
+      transformHeader: h => h.trim(),
+      transform: v => v.trim(),
       complete: function(results) {
         const gallery = document.getElementById('gallery');
         results.data.forEach(row => {
           if (!row.Id) return;
-          const id = row.Id.replace(/^0+/, '');
+          const id = row.Id;  // keep leading zeros, e.g. "001"
           const fig = document.createElement('figure');
           const img = document.createElement('img');
           img.src = `assets/Glasgow_Hundred_Views/${id}.jpeg`;

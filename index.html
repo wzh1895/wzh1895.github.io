@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Glasgow Hundred Views Gallery</title>
+  <link rel="stylesheet" href="assets/gallery.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+  <h1>Glasgow Hundred Views</h1>
+  <div id="gallery" class="gallery"></div>
+
+  <script>
+    Papa.parse('assets/Glasgow_Hundred_Views/index.csv', {
+      download: true,
+      header: true,
+      complete: function(results) {
+        const gallery = document.getElementById('gallery');
+        results.data.forEach(row => {
+          if (!row.Id) return;
+          const id = row.Id.replace(/^0+/, '');
+          const fig = document.createElement('figure');
+          const img = document.createElement('img');
+          img.src = `assets/Glasgow_Hundred_Views/${id}.jpeg`;
+          img.alt = `${row['Description (CN)']} – ${row['Description (EN)']}`;
+          const cap = document.createElement('figcaption');
+          cap.innerHTML = `<strong>${row['Description (CN)']}</strong><br>${row['Description (EN)']}`;
+          fig.appendChild(img);
+          fig.appendChild(cap);
+          gallery.appendChild(fig);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

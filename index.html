@@ -10,6 +10,11 @@
   <h1>格拉斯哥百景 | Glasgow 100 Views</h1>
   <div id="gallery" class="gallery"></div>
 
+  <!-- full‐screen overlay -->
+  <div id="overlay" class="overlay hidden">
+    <img src="" alt="">
+  </div>
+
   <script>
     Papa.parse('assets/Glasgow_Hundred_Views/index.csv', {
       download: true,
@@ -31,6 +36,20 @@
           fig.appendChild(img);
           fig.appendChild(cap);
           gallery.appendChild(fig);
+        });
+
+        // after gallery items are appended:
+        const overlay = document.getElementById('overlay');
+        const overlayImg = overlay.querySelector('img');
+        document.getElementById('gallery').addEventListener('click', e => {
+          if (e.target.tagName === 'IMG') {
+            overlayImg.src = e.target.src;
+            overlayImg.alt = e.target.alt;
+            overlay.classList.remove('hidden');
+          }
+        });
+        overlay.addEventListener('click', () => {
+          overlay.classList.add('hidden');
         });
       }
     });

@@ -17,7 +17,7 @@ h1 {
   border: 1px solid #ddd;
 }
 .gallery img {
-  width: 200%;
+  width: 100%;
   height: auto;
   display: block;
 }

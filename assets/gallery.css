@@ -7,7 +7,7 @@ h1 {
 }
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
   gap: 1em;
 }
 .gallery figure {
@@ -20,6 +20,11 @@ h1 {
   width: 100%;
   height: auto;
   display: block;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.gallery img:hover {
+  transform: scale(1.05);
 }
 .gallery figcaption {
   text-align: center;

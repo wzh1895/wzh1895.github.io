@@ -29,8 +29,12 @@
           const id = row.Id;  // keep leading zeros, e.g. "001"
           const fig = document.createElement('figure');
           const img = document.createElement('img');
-          img.src = `assets/Glasgow_Hundred_Views/${id}.jpeg`;
+          // Use thumbnail for gallery display
+          img.src = `assets/Glasgow_Hundred_Views/thumbnails/${id}.jpeg`;
+          // Store full-size image path as data attribute
+          img.setAttribute('data-fullsize', `assets/Glasgow_Hundred_Views/${id}.jpeg`);
           img.alt = `${row['Description (CN)']} – ${row['Description (EN)']}`;
+          img.style.cursor = 'pointer';
           const cap = document.createElement('figcaption');
           cap.innerHTML = `<strong>${row['Description (CN)']}</strong><br>${row['Description (EN)']}`;
           fig.appendChild(img);
@@ -43,7 +47,8 @@
         const overlayImg = overlay.querySelector('img');
         document.getElementById('gallery').addEventListener('click', e => {
           if (e.target.tagName === 'IMG') {
-            overlayImg.src = e.target.src;
+            // Load full-size image when clicked
+            overlayImg.src = e.target.getAttribute('data-fullsize');
             overlayImg.alt = e.target.alt;
             overlay.classList.remove('hidden');
           }

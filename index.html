@@ -2,19 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Glasgow 100 Views Gallery</title>
   <link rel="stylesheet" href="assets/gallery.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
 <body>
-  <h1>格拉斯哥百景 | Glasgow 100 Views</h1>
-  <div id="gallery" class="gallery"></div>
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <button id="hamburger" class="hamburger" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <h1 class="page-title">Glasgow Views | 格拉斯哥百景</h1>
+  </header>
 
-  <!-- full‐screen overlay -->
-  <div id="overlay" class="overlay hidden">
+  <!-- Sidebar Navigation -->
+  <nav id="sidebar" class="sidebar">
+    <div class="sidebar-section">
+      <h3 class="sidebar-heading">Pages / 页面</h3>
+      <ul>
+        <li><a href="index.html" class="active">Glasgow Views / 格拉斯哥百景</a></li>
+      </ul>
+    </div>
+    
+    <div class="sidebar-separator"></div>
+    
+    <div class="sidebar-section">
+      <h3 class="sidebar-heading">Links / 链接</h3>
+      <ul>
+        <li><a href="https://github.com/wzh1895" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Overlay for sidebar (clicking outside closes sidebar) -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div id="gallery" class="gallery"></div>
+  </main>
+
+  <!-- Full-screen image overlay -->
+  <div id="image-overlay" class="image-overlay hidden">
     <img src="" alt="">
   </div>
 
+  <script>
+    // Sidebar toggle functionality
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      sidebarOverlay.classList.add('visible');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling when sidebar is open
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('visible');
+      document.body.style.overflow = ''; // Restore scrolling
+    }
+
+    hamburger.addEventListener('click', openSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Gallery functionality
+  </script>
   <script>
     Papa.parse('assets/Glasgow_Hundred_Views/index.csv', {
       download: true,
@@ -28,33 +86,40 @@
           if (!row.Id) return;
           const id = row.Id;  // keep leading zeros, e.g. "001"
           const fig = document.createElement('figure');
+          
+          // Create a container div for the image
+          const imgContainer = document.createElement('div');
           const img = document.createElement('img');
+          
           // Use thumbnail for gallery display
           img.src = `assets/Glasgow_Hundred_Views/thumbnails/${id}.jpeg`;
           // Store full-size image path as data attribute
           img.setAttribute('data-fullsize', `assets/Glasgow_Hundred_Views/${id}.jpeg`);
           img.alt = `${row['Description (CN)']} – ${row['Description (EN)']}`;
           img.style.cursor = 'pointer';
+          
           const cap = document.createElement('figcaption');
-          cap.innerHTML = `<strong>${row['Description (CN)']}</strong><br>${row['Description (EN)']}`;
-          fig.appendChild(img);
+          cap.innerHTML = `<strong>${row['Description (CN)']}</strong>${row['Description (EN)']}`;
+          
+          imgContainer.appendChild(img);
+          fig.appendChild(imgContainer);
           fig.appendChild(cap);
           gallery.appendChild(fig);
         });
 
         // after gallery items are appended:
-        const overlay = document.getElementById('overlay');
-        const overlayImg = overlay.querySelector('img');
+        const imageOverlay = document.getElementById('image-overlay');
+        const overlayImg = imageOverlay.querySelector('img');
         document.getElementById('gallery').addEventListener('click', e => {
           if (e.target.tagName === 'IMG') {
             // Load full-size image when clicked
             overlayImg.src = e.target.getAttribute('data-fullsize');
             overlayImg.alt = e.target.alt;
-            overlay.classList.remove('hidden');
+            imageOverlay.classList.remove('hidden');
           }
         });
-        overlay.addEventListener('click', () => {
-          overlay.classList.add('hidden');
+        imageOverlay.addEventListener('click', () => {
+          imageOverlay.classList.add('hidden');
         });
       }
     });
